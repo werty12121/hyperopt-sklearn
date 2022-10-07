@@ -218,6 +218,7 @@ class hyperopt_estimator(BaseEstimator):
                  cv_shuffle: bool = False,
                  warm_start: bool = False,
                  random_state: np.random.Generator = np.random.default_rng(),
+                 cv_groups:list=None
                  ) -> typing.Generator:
         """
         Generator of Trials after ever-increasing numbers of evaluations
@@ -284,7 +285,8 @@ class hyperopt_estimator(BaseEstimator):
                      timeout=self.trial_timeout,
                      loss_fn=self.loss_fn,
                      continuous_loss_fn=self.continuous_loss_fn,
-                     n_jobs=self.n_jobs
+                     n_jobs=self.n_jobs,
+                     cv_groups=cv_groups
                      )
 
         # Wrap up the cost function as a process with timeout control.
@@ -400,7 +402,8 @@ class hyperopt_estimator(BaseEstimator):
             n_folds: int = None,
             cv_shuffle: bool = False,
             warm_start: bool = False,
-            random_state: np.random.Generator = np.random.default_rng()
+            random_state: np.random.Generator = np.random.default_rng(),
+            cv_groups:list=None
             ) -> None:
         """
         Search the space of learners and preprocessing steps for a good
@@ -452,7 +455,8 @@ class hyperopt_estimator(BaseEstimator):
                                  n_folds=n_folds,
                                  cv_shuffle=cv_shuffle,
                                  warm_start=warm_start,
-                                 random_state=random_state)
+                                 random_state=random_state,
+                                 cv_groups=cv_groups)
 
         next(fit_iter)
         adjusted_max_evals = self.max_evals if not warm_start else len(self.trials.trials) + self.max_evals
